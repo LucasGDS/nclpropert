@@ -1,5 +1,5 @@
 local SLAXML = require ("slaxdom_ext")
-local inspect = require ("inspect")
+--local inspect = require ("inspect")
 
 local nclmodel = {}
 
