@@ -1,5 +1,5 @@
 local SLAXML = require ("slaxdom_ext")
-local inspect = require ("inspect")
+--local inspect = require ("inspect")
 
 local nclmodel = {}
 
@@ -14,6 +14,14 @@ function domsearch(proc, knot, v)
   
 	if knot.el ~= nil then
 		if knot.attr["id"] == proc then
+			print("ACHOU" .. knot.attr["id"])
+			for m,n in pairs(v) do
+				local element = {attr = {}, name = "property",type = "element"}
+				SLAXML:set_attr(element, "name", m)	--atributo m e seu valor n
+				SLAXML:set_attr(element, "value", n)
+				table.insert(knot.kids,element)
+			end
+		elseif  knot.attr["id"] ~= nil and proc == "*" and knot.attr["src"] ~= nil then --knot.attr["src"] ~= nil makes sure its a media(keep it?)
 			print("ACHOU" .. knot.attr["id"])
 			for m,n in pairs(v) do
 				local element = {attr = {}, name = "property",type = "element"}
@@ -44,8 +52,14 @@ function nclmodel:process(css, nclfile)
 
 	
 	for k,v in pairs(css) do -- lendo tabela css,le um nome da midia k que aponta para o endereco v com os atributos
-		adicionando = domsearch(k, doc.root, v)	--procura k em doc
+		local proc
+		if string.sub(k, 1, 1) == "#" then
+			proc = string.sub(k, 2)
+			adicionando = domsearch(proc, doc.root, v)	--procura k em doc
+			elseif  string.sub(k, 1, 1) == "*" then
+			adicionando = domsearch(k, doc.root, v)
 		
+		end
 		--print(k) 	-- lista de midias ; print(k,v) v mostra endereco tabela
 		--if k ==
 		--for m,n in pairs(v) do print(m,n) end --atributo m e seu valor n

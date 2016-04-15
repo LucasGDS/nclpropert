@@ -1,7 +1,8 @@
-local NCLMODEL = require  ("nclmodel")
+-- lua yourtable.lua yourncl.ncl
+local NCLMODEL = require  ("nclmodel") 
 
 css = { 
-	["media1"] = {
+	["#media1"] = {
 		["top"] = "100",
 		["left"] = "100"
 	},
