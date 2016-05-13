@@ -148,9 +148,9 @@ function SLAXML:serialize (xml_el, ntabs, TAB)
         end
       end
     else
-      -- if xml_el.type == "text" then
-      --  return xml_el.value
-      -- end
+       if xml_el.type == "text" then --this if was commented
+        return xml_el.value --
+       end	--
     end
     
     -- go recursively 

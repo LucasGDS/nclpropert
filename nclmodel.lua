@@ -15,22 +15,34 @@ function domsearch(proc, knot, v)
 	if knot.el ~= nil then
 		if string.sub(proc, 1, 1) == "#"and knot.attr["id"] == string.sub(proc, 2) then
 			print("ACHOU" .. knot.attr["id"])
-			for m,n in pairs(v) do
-				local element = {attr = {}, name = "property",type = "element"}
-				SLAXML:set_attr(element, "name", m)	--atributo m e seu valor n
-				SLAXML:set_attr(element, "value", n)
-				table.insert(knot.kids,element)
+			if knot.name == "media" then
+				for m,n in pairs(v) do
+					local element = {attr = {}, name = "property",type = "element"}
+					SLAXML:set_attr(element, "name", m)	--atributo m e seu valor n
+					SLAXML:set_attr(element, "value", n)
+					table.insert(knot.kids,element)
+				end
+			else
+				for m,n in pairs(v) do
+					SLAXML:set_attr(knot, m, n)	--atributo m e seu valor n
+				end
 			end
 		elseif  string.sub(proc, 1, 1) == "." and knot.attr["class"] == string.sub(proc, 2) then
-			print("ACHOU" .. knot.attr["id"])
-			for m,n in pairs(v) do
-				local element = {attr = {}, name = "property",type = "element"}
-				SLAXML:set_attr(element, "name", m)	--atributo m e seu valor n
-				SLAXML:set_attr(element, "value", n)
-				table.insert(knot.kids,element)
+			print("ACHOU")-- .. knot.attr["id"])
+			if knot.name == "media" then
+				for m,n in pairs(v) do
+					local element = {attr = {}, name = "property",type = "element"}
+					SLAXML:set_attr(element, "name", m)	--atributo m e seu valor n
+					SLAXML:set_attr(element, "value", n)
+					table.insert(knot.kids,element)
+				end
+			else
+				for m,n in pairs(v) do
+					SLAXML:set_attr(knot, m, n)	--atributo m e seu valor n
+				end
 			end
 		elseif  knot.attr["id"] ~= nil and proc == "*" and knot.attr["src"] ~= nil then --knot.attr["src"] ~= nil makes sure its a media(keep it?)
-			print("ACHOU" .. knot.attr["id"])
+			print("ACHOU")-- .. knot.attr["id"])
 			for m,n in pairs(v) do
 				local element = {attr = {}, name = "property",type = "element"}
 				SLAXML:set_attr(element, "name", m)	--atributo m e seu valor n
@@ -49,7 +61,8 @@ function domsearch(proc, knot, v)
 	  --return table.concat(pieces)
 end
 
-function nclmodel:process(css, nclfile)
+function nclmodel:process(css, nclfile, out)
+	local name = out or "out.xml"
 	local doc = SLAXML:dom(nclfile)
 	local adicionando
 
@@ -64,8 +77,9 @@ function nclmodel:process(css, nclfile)
 	
 	local serial = SLAXML:serialize(doc)
 	
-	--serialize test
-	file = io.open("out.ncl", "w")
+	--serialize test 
+	--TODO: save as anything other than ncl
+	file = io.open(name, "w")
 	file:write(serial)
 	file:flush()
 	file:close()
